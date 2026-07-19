@@ -3,6 +3,8 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { getProductById } from "../apiCall/productApi";
 import RatingStar from "../components/RatingStar";
 import ProductNav from "../components/ProductNav";
+import Loading from "../components/Loading";
+
 
 const SingleProductPage = () => {
   const { id } = useParams();
@@ -52,20 +54,28 @@ const SingleProductPage = () => {
    const nextId = productIds[index];
    navigate(`/product/${nextId}`, { state: { productIds }, replace: true });
  };
-  if (loading) return <p className="p-6">Loading...</p>;
+
+  if (loading) return <Loading/>;
   if (error) return <p className="p-6 text-red-600">Error: {error}</p>;
   if (!product)
     return <h4 className="font-bold text-center">No Product Found</h4>;
   return (
     <>
       <div className="max-w-5xl mx-auto p-6">
-        <button
+        {/* <button
           onClick={() => {
             const filterParams = new URLSearchParams(
               location.state?.filters || {},
             ).toString();
             navigate(`/?${filterParams}`);
           }}
+          className="mb-4 px-4 py-2 border rounded text-sm border-gray-300"
+        >
+          ← Back
+        </button> */}
+
+        <button
+          onClick={() => navigate(-1)}
           className="mb-4 px-4 py-2 border rounded text-sm border-gray-300"
         >
           ← Back
@@ -121,16 +131,15 @@ const SingleProductPage = () => {
               </div>
             )}
           </div>
-          
         </div>
         {productIds.length > 0 && (
-            <ProductNav
-              hasPrev={hasPrev}
-              hasNext={hasNext}
-              onPrev={() => goToIndex(currentIndex - 1)}
-              onNext={() => goToIndex(currentIndex + 1)}
-            />
-          )}
+          <ProductNav
+            hasPrev={hasPrev}
+            hasNext={hasNext}
+            onPrev={() => goToIndex(currentIndex - 1)}
+            onNext={() => goToIndex(currentIndex + 1)}
+          />
+        )}
       </div>
     </>
   );
